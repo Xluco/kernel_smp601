@@ -41,31 +41,31 @@
 #define L_MAX_FREQ	(600000)
 #endif
 
-#define DEF_FREQUENCY_DOWN_DIFFERENTIAL		(10)
-#define DEF_FREQUENCY_UP_THRESHOLD		(80)
+#define DEF_FREQUENCY_DOWN_DIFFERENTIAL		(5)
+#define DEF_FREQUENCY_UP_THRESHOLD		(95)
 #define DEF_SAMPLING_DOWN_FACTOR		(1)
 #define DEF_FREQUENCY_STEP_ZONE			(800000)
 #define MAX_SAMPLING_DOWN_FACTOR		(100000)
-#define MICRO_FREQUENCY_DOWN_DIFFERENTIAL	(3)
-#define MICRO_FREQUENCY_UP_THRESHOLD		(90)
+#define MICRO_FREQUENCY_DOWN_DIFFERENTIAL	(5)
+#define MICRO_FREQUENCY_UP_THRESHOLD		(95)
 #define MICRO_FREQUENCY_MIN_SAMPLE_RATE		(80000)
 #define MIN_FREQUENCY_UP_THRESHOLD		(10)
 #define MAX_FREQUENCY_UP_THRESHOLD		(100)
 #define MAX_FREQ_BLANK				B_MAX_FREQ
 
-#define DEF_FREQUENCY_UP_THRESHOLD_L		(50)
+#define DEF_FREQUENCY_UP_THRESHOLD_L		(60)
 #define DEF_FREQUENCY_UP_STEP_LEVEL_B		(1200000)
 #define DEF_FREQUENCY_UP_STEP_LEVEL_L		L_MAX_FREQ
 #define DEF_FREQUENCY_DOWN_STEP_LEVEL           (800000)
 #define DEF_FREQUENCY_DOWN_DIFFER_L		(20)
 #define DEF_FREQUENCY_HIGH_ZONE			(1200000)
 #define DEF_FREQUENCY_CONSERVATIVE_STEP		(100000)
-#define MICRO_FREQUENCY_UP_THRESHOLD_H		(90)
+#define MICRO_FREQUENCY_UP_THRESHOLD_H		(95)
 #define MICRO_FREQUENCY_UP_THRESHOLD_L		(60)
 #define MICRO_FREQUENCY_UP_STEP_LEVEL_B		(1200000)
 #define MICRO_FREQUENCY_UP_STEP_LEVEL_L		L_MAX_FREQ
 #define MICRO_FREQUENCY_DOWN_STEP_LEVEL		(250000)
-#define MICRO_FREQUENCY_DOWN_DIFFER_L		(20)
+#define MICRO_FREQUENCY_DOWN_DIFFER_L		(5)
 #define MIN_FREQUENCY_UP_STEP_LEVEL		(500000)
 #define MAX_FREQUENCY_UP_STEP_LEVEL		B_MAX_FREQ
 
@@ -1026,16 +1026,7 @@ static inline void dbs_timer_exit(struct cpu_dbs_info_s *dbs_info)
  */
 static int should_io_be_busy(void)
 {
-#if defined(CONFIG_X86)
-	/*
-	 * For Intel, Core 2 (model 15) andl later have an efficient idle.
-	 */
-	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL &&
-	    boot_cpu_data.x86 == 6 &&
-	    boot_cpu_data.x86_model >= 15)
-		return 1;
-#endif
-	return 0;
+	return 1;
 }
 
 static int __ref cpufreq_governor_dbs(struct cpufreq_policy *policy,
