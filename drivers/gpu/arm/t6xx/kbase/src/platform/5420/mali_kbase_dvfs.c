@@ -318,7 +318,7 @@ void hlpr_set_min_max_G3D(unsigned int min, unsigned int max)
 	{
 		if (mali_dvfs_infotbl[i].clock == min)
 			dvfs_step_min = i;
-		if (mali_dvfs_infotbl[i].clock == max)
+		if (mali_dvfs_infotbl[i].clock == max && (i>0))
 		{
 			dvfs_step_max = i+1;
 			dvfs_step_max_minus1 = mali_dvfs_infotbl[i-1].clock;
