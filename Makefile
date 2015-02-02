@@ -245,8 +245,8 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = ccache gcc
 HOSTCXX      = ccache g++
-HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89
-HOSTCXXFLAGS = -O2 -std=gnu89
+HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fomit-frame-pointer -std=gnu89 -fgcse-las
+HOSTCXXFLAGS = -O3 -std=gnu89 -fgcse-las
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -347,10 +347,18 @@ CHECK		= sparse
 
 CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
 		  -Wbitwise -Wno-return-void $(CF)
-CFLAGS_MODULE   =
+LDFLAGS = -O1 --as-needed --sort-common -S
+CFLAGS_MODULE = $(CFLAGS_KERNEL)
 AFLAGS_MODULE   =
-LDFLAGS_MODULE  =
-CFLAGS_KERNEL	=
+LDFLAGS_MODULE = $(LDFLAGS)
+CFLAGS_KERNEL = -marm -mfpu=neon-vfpv4 -funsafe-loop-optimizations -funsafe-math-optimizations \
+				-mvectorize-with-neon-quad \
+				-fgcse-sm -fgcse-las \
+				-ftree-loop-im -ftree-loop-ivcanon -fivopts \
+				-fweb -ftracer \
+				-fsched-spec-load -fforce-addr -fsingle-precision-constant \
+				-fsection-anchors -frename-registers \
+				-fmodulo-sched -fmodulo-sched-allow-regmoves
 AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
@@ -364,11 +372,15 @@ LINUXINCLUDE    := -I$(srctree)/arch/$(hdr-arch)/include \
 
 KBUILD_CPPFLAGS := -D__KERNEL__
 
-KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
-		   -fno-strict-aliasing -fno-common \
-		   -Wno-format-security -Wno-unused \
-		   -fno-delete-null-pointer-checks \
-		   -std=gnu89
+KBUILD_CFLAGS := -DNDBUG -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
+				-fno-strict-aliasing -fno-common \
+				-Wno-format-security -Wno-unused \
+				-fno-delete-null-pointer-checks \
+				-Wno-maybe-uninitialized \
+				-Wno-sizeof-pointer-memaccess \
+				-Wno-error=unused-parameter -Wno-error=unused-but-set-variable \
+				-fno-exceptions -Wno-multichar -Wno-sequence-point \
+				-std=gnu89
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
@@ -561,7 +573,7 @@ all: vmlinux
 ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
 KBUILD_CFLAGS	+= -Os
 else
-KBUILD_CFLAGS	+= -O2
+KBUILD_CFLAGS	+= -O3
 endif
 
 # conserve stack if available
@@ -585,6 +597,9 @@ endif
 # This warning generated too much noise in a regular build.
 # Use make W=1 to enable this warning (see scripts/Makefile.build)
 KBUILD_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
+
+## Fix GCC 4.9 Scheduler bug
+KBUILD_CFLAGS += $(call cc-option, -fno-var-tracking-assignments)
 
 ifdef CONFIG_FRAME_POINTER
 KBUILD_CFLAGS	+= -fno-omit-frame-pointer -fno-optimize-sibling-calls

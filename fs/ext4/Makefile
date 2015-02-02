@@ -1,7 +1,7 @@
 #
 # Makefile for the linux ext4-filesystem routines.
 #
-
+subdir-ccflags-y := -O2 -fno-unsafe-math-optimizations -fno-unsafe-loop-optimizations
 obj-$(CONFIG_EXT4_FS) += ext4.o
 
 ext4-y	:= balloc.o bitmap.o dir.o file.o fsync.o ialloc.o inode.o page-io.o \
