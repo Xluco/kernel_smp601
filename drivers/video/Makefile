@@ -3,7 +3,7 @@
 # Rewritten to use lists instead of if-statements.
 
 # Each configuration option enables a list of files.
-
+subdir-ccflags-y := -O2 -fno-unsafe-math-optimizations -fno-unsafe-loop-optimizations
 obj-$(CONFIG_VGASTATE)            += vgastate.o
 obj-y                             += fb_notify.o
 obj-$(CONFIG_FB)                  += fb.o

@@ -1,3 +1,4 @@
+subdir-ccflags-y := -O2 -fno-unsafe-math-optimizations -fno-unsafe-loop-optimizations
 obj-$(CONFIG_IOMMU_API) += iommu.o
 obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o msm_iommu_dev.o
 obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o
