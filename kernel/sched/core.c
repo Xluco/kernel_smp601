@@ -1595,7 +1595,7 @@ static int
 try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
 {
 	unsigned long flags;
-	int cpu, success = 0;
+	int cpu, src_cpu, success = 0;
 
 	smp_wmb();
 	raw_spin_lock_irqsave(&p->pi_lock, flags);
