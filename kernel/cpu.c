@@ -318,7 +318,7 @@ static int __cpuinit _cpu_up(unsigned int cpu, int tasks_frozen)
 	idle = idle_thread_get(cpu);
 	if (IS_ERR(idle)) {
 		ret = PTR_ERR(idle);
-		goto out;
+		goto out_notify;
 	}
 
 	ret = smpboot_create_threads(cpu);
