@@ -625,7 +625,6 @@ extern const struct gsc_vb2 gsc_vb2_cma;
 extern const struct gsc_vb2 gsc_vb2_ion;
 #endif
 
-void gsc_set_prefbuf(struct gsc_dev *gsc, struct gsc_frame frm);
 void gsc_pm_qos_ctrl(struct gsc_dev *gsc, enum gsc_qos_status status,
 			int mem_val, int int_val);
 void gsc_clock_gating(struct gsc_dev *gsc, enum gsc_clk_status status);
